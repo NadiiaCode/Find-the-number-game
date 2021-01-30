@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Find the number!</title>
+  </head>
+  <body>
+    <div class="wrapper">
+      <div class="game-window">
+        <div class="game-start-message">
+          <span id="timer">0s</span>
+        </div>
+
+        <div class="game-board-container">
+          <div class="game-board">
+            <div class="box"></div>
+            <div class="box"></div>
+            <div class="box"></div>
+            <div class="box"></div>
+            <div class="box"></div>
+            <div class="box"></div>
+            <div class="box"></div>
+            <div class="box"></div>
+            <div class="box"></div>
+            <div class="box"></div>
+            <div class="box"></div>
+            <div class="box"></div>
+            <div class="box"></div>
+            <div class="box"></div>
+            <div class="box"></div>
+            <div class="box"></div>
+            <div class="box"></div>
+            <div class="box"></div>
+            <div class="box"></div>
+            <div class="box"></div>
+            <div class="box"></div>
+            <div class="box"></div>
+            <div class="box"></div>
+            <div class="box"></div>
+            <div class="box"></div>
+            <div class="box"></div>
+            <div class="box"></div>
+            <div class="box"></div>
+            <div class="box"></div>
+            <div class="box"></div>
+            <div class="box"></div>
+            <div class="box"></div>
+            <div class="box"></div>
+            <div class="box"></div>
+            <div class="box"></div>
+            <div class="box"></div>
+            <div class="box"></div>
+            <div class="box"></div>
+            <div class="box"></div>
+            <div class="box"></div>
+            <div class="box"></div>
+            <div class="box"></div>
+            <div class="box"></div>
+            <div class="box"></div>
+            <div class="box"></div>
+            <div class="box"></div>
+            <div class="box"></div>
+            <div class="box"></div>
+            <div class="box"></div>
+            <div class="box"></div>
+          </div>
+        </div>
+        <div class="start-screen screen" id="startScreen">
+          <div class="game-title">Find the number!</div>
+
+          <div class="msg">
+            In game available boxes from number 1 to 50 in ascending order. You
+            must find each number one after another. If you select the wrong box
+            than you loose. <br />
+            Enjoy the game! : )
+          </div>
+
+          <button onclick="statGame(event)">Start</button>
+        </div>
+        <div
+          class="game-over-screen screen"
+          id="gameOverScreen"
+          data-state="hidden"
+        >
+          <div class="screen-title">GAME OVER</div>
+          <div class="msg">Please try again!</div>
+          <button onclick="statGame(event)">Try Again</button>
+        </div>
+
+        <div class="score-screen screen" id="scoreScreen" data-state="hidden">
+          <div class="screen-title">YOU WON</div>
+          <div class="msg">Your Time is <span id="scorePageTime"></span></div>
+          <button onclick="statGame(event)">Play Again</button>
+        </div>
+      </div>
+    </div>
+
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Fredoka+One&display=swap");
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Fredoka One", cursive;
+      }
+
+      body {
+        width: 100vw;
+        max-width: 100%;
+        overflow-x: hidden;
+      }
+
+      .wrapper {
+        width: 100%;
+        height: 100vh;
+        position: relative;
+        display: flex;
+        overflow: hidden;
+      }
+
+      .game-window {
+        display: flex;
+        flex: 1;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        background-repeat: no-repeat;
+        background-image: radial-gradient(
+          circle,
+          #f0ff89,
+          #dde576,
+          #cacb63,
+          #b6b251,
+          #a29a40,
+          #8c8935,
+          #77782a,
+          #636820,
+          #4a5a1a,
+          #344b15,
+          #132908,
+          #0a2e0a
+        );
+      }
+
+      .game-window .game-start-message {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+
+      #timer,
+      #scorePageTime {
+        font-size: 40px;
+        letter-spacing: 5px;
+        color: #eff0a4;
+      }
+
+      #scorePageTime {
+        margin-left: 1rem;
+      }
+
+      .game-board-container {
+        position: relative;
+        background-repeat: no-repeat;
+        background-image: radial-gradient(
+          circle,
+          #eff0a4,
+          #ebeca0,
+          #e7e89b,
+          #e4e597,
+          #e0e193,
+          #dadb8c,
+          #d4d586,
+          #cecf7f,
+          #c4c574,
+          #babb68,
+          #b1b25d,
+          #a7a852
+        );
+      }
+
+      .game-board-container .game-board {
+        width: 100%;
+        height: 300px;
+        margin-top: 25px;
+        padding: 6px;
+        display: grid;
+        grid-template: repeat(10, 1fr) / repeat(10, 1fr);
+        gap: 6px;
+      }
+
+      .game-board-container .game-board .box {
+        position: relative;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 2.2rem;
+        cursor: pointer;
+        color: #ffffff;
+        background-color: #0a2e0a;
+        transition: all 400ms ease-out;
+      }
+
+      .game-board-container .game-board .box:hover {
+        background-color: #33d60a;
+      }
+
+      .game-board-container .game-board .box::before {
+        width: 90%;
+        height: 90%;
+        top: 50%;
+        left: 50%;
+        position: absolute;
+        content: "";
+        background-color: transparent;
+        border-radius: 50%;
+        transition: all 400ms ease-out;
+        transform: translate(-50%, -50%) scale(0);
+      }
+
+      .game-board-container .game-board .box .num {
+        position: relative;
+        z-index: 1;
+      }
+
+      .game-board-container .game-board .box[data-marked="true"]:before {
+        background-color: #d3cf07;
+        transform: translate(-50%, -50%) scale(1);
+      }
+
+      .game-window .screen {
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        background-color: #0a2e0a;
+        transition: opacity 250ms ease-out;
+        z-index: 99;
+      }
+
+      .game-window .screen[data-state="hidden"] {
+        opacity: 0;
+        pointer-events: none;
+      }
+
+      .game-window .screen button {
+        padding: 10px 20px;
+        font-size: 35px;
+        letter-spacing: 5px;
+        text-transform: uppercase;
+        cursor: pointer;
+        outline: none;
+        border-radius: 25px;
+        border: 7px double #e1ee98;
+        color: #d2e07f;
+        background-color: transparent;
+      }
+
+      .game-window .screen button:hover {
+        background-color: #5c7c32;
+      }
+
+      .game-window .screen button:active {
+        background-color: #3d5320;
+      }
+
+      .game-window .start-screen .game-title {
+        font-size: 60px;
+        letter-spacing: 4px;
+        color: #f0ff89;
+      }
+
+      .game-window .screen .screen-title {
+        padding: 0.5rem;
+        position: relative;
+        font-size: 35px;
+        letter-spacing: 4px;
+        color: #f0ff89;
+        background-color: #424911;
+      }
+
+      .game-window .screen .screen-title::before {
+        width: 100%;
+        height: 4px;
+        left: 0;
+        position: absolute;
+        content: "";
+        background-color: #f0ff89;
+        bottom: calc(100% + 4px);
+      }
+
+      .game-window .screen .screen-title::after {
+        width: 100%;
+        height: 4px;
+        left: 0;
+        position: absolute;
+        content: "";
+        background-color: #f0ff89;
+        top: calc(100% + 4px);
+      }
+
+      .game-window .screen .msg {
+        max-width: 35ch;
+        margin: 60px 0;
+        display: flex;
+        align-items: center;
+        text-align: center;
+        font-size: 22px;
+        letter-spacing: 2px;
+        color: #faffdc;
+      }
+    </style>
+
+    <script>
+      let boxNumber;
+      let targetNumber;
+      let startTimer;
+      let gameTimer;
+
+      window.addEventListener("load", startGame);
+
+      function startGame() {
+        targetNumber = 1;
+        startTimer = NaN;
+        boxNumber = [...document.querySelectorAll(".box")];
+        boxNumber.forEach((inputField, i) => {
+          inputField.addEventListener("click", () => markCell(`${i}`));
+        });
+      }
+
+      function fillRandom() {
+        let numbers = [];
+        for (i = 1; i < 51; i++) numbers.push(i);
+        for (i = 0; i < boxNumber.length; i++) {
+          let number = numbers[Math.floor(Math.random() * numbers.length)];
+          boxNumber[i].innerHTML = `<div class="num">${number}</div>`;
+          boxNumber[i].value = number;
+          numbers = numbers.filter((n) => n != boxNumber[i].innerText);
+        }
+      }
+
+      function statGame(event) {
+        targetNumber = 1;
+        startTimer = performance.now();
+        event.target.parentNode.setAttribute("data-state", "hidden");
+        fillRandom();
+        boxNumber.forEach((inputField, i) => {
+          inputField.setAttribute("data-marked", "false");
+        });
+
+        timer.innerText = `0s`;
+        scorePageTime.innerHTML = `0s`;
+        gameTimer = setInterval(clockTick, 1000);
+      }
+
+      function check(clickedNumber) {
+        if (clickedNumber == targetNumber) {
+          targetNumber++;
+        } else {
+          gameOver();
+        }
+        if (targetNumber >= 51) {
+          showScore();
+        }
+      }
+
+      function clockTick() {
+        let seconds = Math.floor((performance.now() - startTimer) / 1000);
+        let minutes = Math.floor(seconds / 60);
+        if (minutes > 0) {
+          timer.innerText = `${minutes}m ${seconds % 60}s`;
+          scorePageTime.innerHTML = `${minutes}m ${seconds % 60}s`;
+        } else {
+          timer.innerText = `${seconds % 60}s`;
+          scorePageTime.innerText = `${seconds % 60}s`;
+        }
+      }
+
+      function markCell(index) {
+        boxNumber[index].setAttribute("data-marked", "true");
+        check(boxNumber[index].querySelector(".num").innerText);
+      }
+
+      function showScore() {
+        scoreScreen.setAttribute("data-state", "visible");
+        clearInterval(gameTimer);
+      }
+
+      function gameOver() {
+        clearInterval(gameTimer);
+        gameOverScreen.setAttribute("data-state", "visible");
+      }
+    </script>
+  </body>
+</html>
